@@ -3,8 +3,6 @@ package controller;
 import bo.BOFactory;
 import bo.custom.impl.Student_RegistrationBOImpl;
 import dto.Student_RegistrationDTO;
-import dto.TrainingProgramDTO;
-import entity.Student;
 import entity.Student_Registration;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
@@ -21,13 +19,17 @@ public class DeleteRegistercontroller {
     public TextField txtId;
     public AnchorPane deletePane;
 
+    private DashBoardcontroller dashBoardcontroller;
+
     Student_RegistrationBOImpl student_registrationBOImpl = (Student_RegistrationBOImpl) BOFactory.getBoFactory().getBo(BOFactory.BOType.STUDENT_REGISTRATION);
 
     public void registerBtnDeleteOnAction(ActionEvent actionEvent) {
         try {
             if(student_registrationBOImpl.deleteRegister(txtId.getText())){
                 new Alert(Alert.AlertType.CONFIRMATION, "Do you want a Delete it?").showAndWait();
-                /*clear();*/
+                dashBoardcontroller.loadAllStudent_registration();
+                clear();
+
             }
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Something Happened. try again carefully!").showAndWait();
@@ -57,9 +59,22 @@ public class DeleteRegistercontroller {
         if(student_registrationBOImpl.updateRegister(new Student_RegistrationDTO(txtId.getText(),txtDate.getText(),txtProgramId.getText()
                 ,txtStudentId.getText(),Double.parseDouble(txtPayment.getText())))){
             new Alert(Alert.AlertType.CONFIRMATION, "Do you want a Update it?").showAndWait();
+            dashBoardcontroller.loadAllStudent_registration();
+            clear();
+
 
         }else{
-            /*new Alert(Alert.AlertType.ERROR, "Something Happened. try again carefully!").showAndWait();*/
+            new Alert(Alert.AlertType.ERROR, "Something Happened. try again carefully!").showAndWait();
         }
+    }
+    public void clear() {
+        txtId.clear();
+        txtDate.clear();
+        txtProgramId.clear();
+        txtStudentId.clear();
+        txtPayment.clear();
+    }
+    public void setController(DashBoardcontroller dashBoardcontroller) {
+        this.dashBoardcontroller=dashBoardcontroller;
     }
 }

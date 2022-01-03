@@ -163,11 +163,12 @@ public class DashBoardcontroller {
     }
 
     public void btnBackOnAction(ActionEvent actionEvent) throws IOException {
-        URL resource = getClass().getResource("../View/EnterForm.fxml");
+        URL resource = getClass().getResource("../view/MainForm.fxml");
         Parent load = FXMLLoader.load(resource);
         Stage window = (Stage) dashBoardPane.getScene().getWindow();
         window.setScene(new Scene(load));
     }
+
 
     public void btnSaveStudentOnAction(ActionEvent actionEvent) {
         try {
@@ -187,6 +188,8 @@ public class DashBoardcontroller {
     public void btnUpdateStudentOnAction(ActionEvent actionEvent) throws Exception {
         if(studentBOImpl.updateStudent(new StudentDTO(txtStudentId.getText(),txtStudentName.getText(),txtAge.getText()
                 ,(String) cmbGender.getValue(),txtAddress.getText()))){
+            loadAllStudent();
+            loadStudentId();
 
             new Alert(Alert.AlertType.CONFIRMATION, "Do you want a Update it?").showAndWait();
             clear();
@@ -198,6 +201,8 @@ public class DashBoardcontroller {
     public void btnDeleteStudentOnAction(ActionEvent actionEvent) {
         try {
             if(studentBOImpl.deleteStudent(txtStudentId.getText())){
+                loadAllStudent();
+                loadStudentId();
                 new Alert(Alert.AlertType.CONFIRMATION, "Do you want a Delete it?").showAndWait();
                 clear();
             }
@@ -257,6 +262,8 @@ public class DashBoardcontroller {
     public void btnUpdateProgramOnAction(ActionEvent actionEvent) throws Exception {
         if(trainingProgramBOImpl.updateProgram(new TrainingProgramDTO(txtProgramingId.getText(),txtProgram.getText(),txtDuration.getText()
                 ,Double.parseDouble(txtFee.getText())))){
+            loadAllTrainingProgram();
+            loadProgramId();
             new Alert(Alert.AlertType.CONFIRMATION, "Do you want a Update it?").showAndWait();
             clear();
         }else{
@@ -267,6 +274,8 @@ public class DashBoardcontroller {
     public void btnDeleteProgramOnAction(ActionEvent actionEvent) {
         try {
             if(trainingProgramBOImpl.deleteProgram(txtProgramingId.getText())){
+                loadAllTrainingProgram();
+                loadProgramId();
                 new Alert(Alert.AlertType.CONFIRMATION, "Do you want a Delete it?").showAndWait();
                 clear();
             }
@@ -304,7 +313,7 @@ public class DashBoardcontroller {
 
     }
 
-    private void loadAllStudent_registration() throws Exception {
+    public void loadAllStudent_registration() throws Exception {
 
         tblRegister.setItems(student_registrationBOImpl.getAll());
     }
@@ -324,13 +333,16 @@ public class DashBoardcontroller {
     }
 
     public void btnDeleteRegistrationOnAction(ActionEvent actionEvent) throws IOException {
-        URL resource = getClass().getResource("../view/DeleteRegister.fxml");
-        Parent load = FXMLLoader.load(resource);
+        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("../view/DeleteRegister.fxml"));
+        Parent load = fxmlLoader.load();
+        DeleteRegistercontroller controller = fxmlLoader.getController();
+        controller.setController(this);
         Scene scene = new Scene(load);
-        Stage stage=new Stage();
+        Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
     }
+
 
     private void loadDateAndTime() {
         Date date = new Date();
